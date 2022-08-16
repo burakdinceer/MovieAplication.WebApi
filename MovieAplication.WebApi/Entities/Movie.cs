@@ -11,6 +11,7 @@ namespace MovieAplication.WebApi.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Duration { get; set; }
+        public decimal Rating { get; set; }
         public virtual ICollection<Genre> Genres { get; set; }
 
 

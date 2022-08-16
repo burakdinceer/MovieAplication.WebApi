@@ -9,6 +9,7 @@ namespace MovieAplication.WebApi.Entities
         public int SerialId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public decimal Rating { get; set; }
         public int  Episode { get; set; }
         public int Seison { get; set; }
         public virtual ICollection<Genre> Genres { get; set; }
