@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieAplication.WebApi.ViewModels
 {
-    public class MovieGetListQuery
+    public class MovieGetListResponse
     {
         public int MovieId { get; set; }
         public string Name { get; set; }

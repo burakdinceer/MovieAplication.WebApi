@@ -4,6 +4,8 @@ using MovieAplication.WebApi.Entities;
 using MovieAplication.WebApi.Interfaces;
 using MovieAplication.WebApi.Repositories;
 using MovieAplication.WebApi.ViewModels;
+using MovieAplication.WebApi.ViewModelsMovie.MovieAdd;
+using MovieAplication.WebApi.ViewModelsMovie.MovieUpdate;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,9 +29,9 @@ namespace MovieAplication.WebApi.Controllers
 
         [HttpGet]
         [Route("GetList")]
-        public List<MovieGetListQuery> GetList()
+        public List<MovieGetListResponse> GetList()
         {
-            var query = _movieRepository.GetAll().Select(x => new MovieGetListQuery
+            var query = _movieRepository.GetAll().Select(x => new MovieGetListResponse
             {
                 Description = x.Description,
                 Duration = x.Duration,
@@ -44,7 +46,7 @@ namespace MovieAplication.WebApi.Controllers
         }
         [HttpGet]
         [Route("GetId")]
-        public MovieGetIdQuery GetId(int id)
+        public MovieGetIdResponse GetId(int id)
         {
             var query = _movieRepository.GetId(id);
             if (query == null)
@@ -53,7 +55,7 @@ namespace MovieAplication.WebApi.Controllers
             }
             else
             {
-               var result = _movieRepository.GetAll().Where(x => x.MovieId == id).Select(x => new MovieGetIdQuery
+               var result = _movieRepository.GetAll().Where(x => x.MovieId == id).Select(x => new MovieGetIdResponse
                 {
                     Description = x.Description,
                     Duration = x.Duration,
@@ -65,6 +67,70 @@ namespace MovieAplication.WebApi.Controllers
                 }).FirstOrDefault();
                 return result;
             }
+        }
+
+        [HttpPut]
+        [Route("MovieUpdate")]
+        public MovieUpdateResponse MovieUpdate(MovideUpdateRequest model, int id)
+        {
+            var control = _movieRepository.GetId(id);
+            if (control == null)
+                return null;
+            else
+            {
+                control.Name = model.Name;
+                control.Description = model.Description;
+                control.Duration= model.Duration;
+            }
+
+            _movieRepository.UpdateT(control);
+            var result =_movieRepository.GetId(id);
+            MovieUpdateResponse resultUpdate = new MovieUpdateResponse
+            {
+
+                Duration = result.Duration,
+                Description = result.Description,
+                GenreDescription = result.Genre.Description,
+                GenreName = result.Genre.Name,
+                Name = result.Name,
+                Rating = result.Rating,
+            };
+            return resultUpdate;
+        }
+
+        [HttpPost]
+        [Route("MovieAdd")]
+        public IActionResult MovieAdd(MovieAddRequest model)
+        {
+            Movie newMovie = new Movie
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Duration = model.Duration,
+                GenreId = model.GenreId,
+                Rating = model.Rating,
+            };
+
+            var create = _movieRepository.AddT(newMovie);
+            if (create == null)
+                return null;
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("MovieDelete")]
+        public bool MovieDelete(int id)
+        {
+            var delete = _movieRepository.GetId(id);
+            if (delete != null)
+            {
+                _movieRepository.DeleteT(id);
+                return true;
+            }
+            else
+                return false;
+               
+
         }
     }
 }

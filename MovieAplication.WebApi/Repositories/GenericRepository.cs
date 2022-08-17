@@ -1,4 +1,5 @@
-﻿using MovieAplication.WebApi.Entities.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieAplication.WebApi.Entities.Data;
 using MovieAplication.WebApi.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,18 @@ namespace MovieAplication.WebApi.Repositories
 
         public T AddT(T entity)
         {
-
-            throw new System.NotImplementedException();
+            _context.Add(entity);
+            _context.SaveChanges();
+            return entity;
+            
         }
 
         public void DeleteT(int id)
         {
-            throw new System.NotImplementedException();
+            var delete = _context.Set<T>().Find(id);
+            _context.Set<T>().Remove(delete);
+            _context.SaveChanges();
+
         }
 
         public IList<T> GetAll()
@@ -37,7 +43,9 @@ namespace MovieAplication.WebApi.Repositories
 
         public T UpdateT(T entity)
         {
-            throw new System.NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+            return entity;
         }
     }
 }
