@@ -1,6 +1,7 @@
 ﻿using MovieAplication.WebApi.Entities.Data;
 using MovieAplication.WebApi.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MovieAplication.WebApi.Repositories
 {
@@ -26,12 +27,12 @@ namespace MovieAplication.WebApi.Repositories
 
         public IList<T> GetAll()
         {
-            throw new System.NotImplementedException();
+         return  _context.Set<T>().ToList();
         }
 
         public T GetId(int id)
         {
-            throw new System.NotImplementedException();
+            return _context.Set<T>().Find(id);
         }
 
         public T UpdateT(T entity)

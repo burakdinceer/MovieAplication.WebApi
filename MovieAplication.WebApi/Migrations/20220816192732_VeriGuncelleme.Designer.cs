@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieAplication.WebApi.Entities.Data;
 
 namespace MovieAplication.WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220816192732_VeriGuncelleme")]
+    partial class VeriGuncelleme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,10 +30,20 @@ namespace MovieAplication.WebApi.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SerialId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("SerialId");
 
                     b.ToTable("Genres");
                 });
@@ -49,9 +61,6 @@ namespace MovieAplication.WebApi.Migrations
                     b.Property<decimal>("Duration")
                         .HasColumnType("decimal(12,2)");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -59,8 +68,6 @@ namespace MovieAplication.WebApi.Migrations
                         .HasColumnType("decimal(12,1)");
 
                     b.HasKey("MovieId");
-
-                    b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
                 });
@@ -78,9 +85,6 @@ namespace MovieAplication.WebApi.Migrations
                     b.Property<int>("Episode")
                         .HasColumnType("int");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -92,38 +96,36 @@ namespace MovieAplication.WebApi.Migrations
 
                     b.HasKey("SerialId");
 
-                    b.HasIndex("GenreId");
-
                     b.ToTable("Serials");
-                });
-
-            modelBuilder.Entity("MovieAplication.WebApi.Entities.Movie", b =>
-                {
-                    b.HasOne("MovieAplication.WebApi.Entities.Genre", "Genre")
-                        .WithMany("Movies")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
-                });
-
-            modelBuilder.Entity("MovieAplication.WebApi.Entities.Serial", b =>
-                {
-                    b.HasOne("MovieAplication.WebApi.Entities.Genre", "Genre")
-                        .WithMany("Serials")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("MovieAplication.WebApi.Entities.Genre", b =>
                 {
-                    b.Navigation("Movies");
+                    b.HasOne("MovieAplication.WebApi.Entities.Movie", "Movie")
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Serials");
+                    b.HasOne("MovieAplication.WebApi.Entities.Serial", "Serial")
+                        .WithMany("Genres")
+                        .HasForeignKey("SerialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("Serial");
+                });
+
+            modelBuilder.Entity("MovieAplication.WebApi.Entities.Movie", b =>
+                {
+                    b.Navigation("Genres");
+                });
+
+            modelBuilder.Entity("MovieAplication.WebApi.Entities.Serial", b =>
+                {
+                    b.Navigation("Genres");
                 });
 #pragma warning restore 612, 618
         }

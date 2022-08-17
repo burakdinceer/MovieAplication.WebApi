@@ -12,7 +12,9 @@ namespace MovieAplication.WebApi.Entities
         public decimal Rating { get; set; }
         public int  Episode { get; set; }
         public int Seison { get; set; }
-        public virtual ICollection<Genre> Genres { get; set; }
+        [ForeignKey("GenreId")]
+        public virtual Genre Genre { get; set; }
+        public int GenreId { get; set; }
 
     }
 }

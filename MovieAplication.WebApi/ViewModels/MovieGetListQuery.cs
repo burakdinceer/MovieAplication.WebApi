@@ -1,24 +1,18 @@
-﻿using System;
+﻿using MovieAplication.WebApi.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MovieAplication.WebApi.Entities
+namespace MovieAplication.WebApi.ViewModels
 {
-    public class Movie
+    public class MovieGetListQuery
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MovieId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Duration { get; set; }
         public decimal Rating { get; set; }
-
-        [ForeignKey("GenreId")]
-        public virtual Genre Genre { get; set; }
+        
         public int GenreId { get; set; }
-
-
-
-
+        public string GenreName { get; set; }
     }
 }
