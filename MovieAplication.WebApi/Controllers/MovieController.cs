@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieAplication.WebApi.Entities;
 using MovieAplication.WebApi.Interfaces;
@@ -6,6 +7,7 @@ using MovieAplication.WebApi.Repositories;
 using MovieAplication.WebApi.ViewModels;
 using MovieAplication.WebApi.ViewModelsMovie.MovieAdd;
 using MovieAplication.WebApi.ViewModelsMovie.MovieUpdate;
+using MovieAplication.WebApi.ViewModelsMovieValidation.MovieGetIdValidation;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,14 +65,16 @@ namespace MovieAplication.WebApi.Controllers
                     GenreName = x.Genre?.Name,
                     Name = x.Name,
                     Rating = x.Rating,
+                    MovieId=x.MovieId,
 
                 }).FirstOrDefault();
+               
                 return result;
             }
         }
 
         [HttpPut]
-        [Route("MovieUpdate")]
+        [Route("Update")]
         public MovieUpdateResponse MovieUpdate(MovideUpdateRequest model, int id)
         {
             var control = _movieRepository.GetId(id);
@@ -99,7 +103,7 @@ namespace MovieAplication.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("MovieAdd")]
+        [Route("Add")]
         public IActionResult MovieAdd(MovieAddRequest model)
         {
             Movie newMovie = new Movie
@@ -114,11 +118,12 @@ namespace MovieAplication.WebApi.Controllers
             var create = _movieRepository.AddT(newMovie);
             if (create == null)
                 return null;
+            else
             return Ok();
         }
 
         [HttpDelete]
-        [Route("MovieDelete")]
+        [Route("Delete")]
         public bool MovieDelete(int id)
         {
             var delete = _movieRepository.GetId(id);
